@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_application_1/Controller/Expense%20Controller.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class ViewAll extends StatelessWidget {
-  final ExpenseController expenseController = Get.put(ExpenseController());
+  final ExpenseController expenseController = Get.find<ExpenseController>();
 
   ViewAll({super.key});
 
@@ -15,27 +15,39 @@ class ViewAll extends StatelessWidget {
         title: Text(
           'All Expenses',
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 25,
             fontWeight: FontWeight.bold,
             color: Colors.black,
-            letterSpacing: 1,
+            letterSpacing: 1.5,
           ),
         ),
       ),
-      body: Obx(() {
-        return ListView.builder(
+      body: Obx(
+        () => ListView.builder(
           itemCount: expenseController.expenses.length,
           itemBuilder: (context, index) {
             final expense = expenseController.expenses[index];
             return ListTile(
               leading: Icon(expense.icon, color: expense.color),
-              title: Text(expense.description),
-              subtitle: Text(DateFormat('dd/MM/yyyy').format(expense.date)),
-              trailing: Text('\$${expense.amount.toStringAsFixed(2)}'),
+              title: Text(
+                expense.description,
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+              subtitle: Text(
+                DateFormat('dd/MM/yyyy').format(expense.date),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+              ),
+              trailing: Text(
+                '\$${expense.amount.toStringAsFixed(2)}',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
             );
           },
-        );
-      }),
+        ),
+      ),
     );
   }
 }

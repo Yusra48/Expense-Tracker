@@ -304,7 +304,7 @@ class _AddExpenseState extends State<AddExpense> {
   void _saveExpense() {
     double? amount = double.tryParse(expenseTextController.text);
 
-    if (amount == 0) {
+    if (amount == null || amount == 0) {
       Get.snackbar(
         'Error',
         'Please enter a valid amount.',
@@ -326,17 +326,13 @@ class _AddExpenseState extends State<AddExpense> {
       return;
     }
 
-    String categoryName = selectedCategory!.name;
-    IconData icon = selectedCategory!.icon;
-    Color color = selectedCategory!.color;
-    DateTime date = selectDate;
     expenseController.addExpense(
-      amount!,
+      amount,
       categoryController.text,
-      categoryName,
-      date,
-      icon,
-      color,
+      selectedCategory!.name,
+      selectDate,
+      selectedCategory!.icon,
+      selectedCategory!.color,
     );
 
     expenseTextController.clear();

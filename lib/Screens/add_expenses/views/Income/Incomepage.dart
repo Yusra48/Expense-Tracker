@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'dart:math';
 
-class IncomePage extends StatelessWidget {
+import 'package:flutter_application_1/Screens/add_expenses/views/Income/Confirmationpage.dart';
+import 'package:flutter_application_1/Screens/profile/Profile.dart';
+
+class IncomePage extends StatefulWidget {
   const IncomePage({super.key});
+
+  @override
+  _IncomePageState createState() => _IncomePageState();
+}
+
+class _IncomePageState extends State<IncomePage> {
+  String amount = '';
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +24,11 @@ class IncomePage extends StatelessWidget {
           child: Text(
             'Income',
             style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-                letterSpacing: 1.5),
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              letterSpacing: 1.5,
+            ),
           ),
         ),
         actions: [
@@ -27,7 +38,10 @@ class IncomePage extends StatelessWidget {
               color: Colors.black,
               size: 25,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()));
+            },
           ),
         ],
       ),
@@ -43,39 +57,40 @@ class IncomePage extends StatelessWidget {
                   Text(
                     'My Wallet',
                     style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                   Text(
                     'View All',
                     style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.grey),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.grey,
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
               _buildCardsSection(context),
               const SizedBox(height: 10),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Send Money',
                     style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                  SizedBox(width: 290),
-                  Text(
-                    'See all',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.grey),
+                  IconButton(
+                    icon: const Icon(Icons.send, color: Colors.black),
+                    onPressed: () {
+                      _showAmountDialog(context);
+                    },
                   ),
                 ],
               ),
@@ -83,16 +98,15 @@ class IncomePage extends StatelessWidget {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildPersonContainer(
                       imageUrl:
                           'https://cdn.pixabay.com/photo/2017/07/14/10/59/girl-2503468_1280.jpg',
                       name: 'Alexa Paul',
-                      amount: '\$100,67',
+                      amount: '\$100.67',
                       color: const Color(0xFF8CD890),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     _buildPersonContainer(
                       imageUrl:
                           'https://cdn.pixabay.com/photo/2015/06/22/08/40/child-817373_640.jpg',
@@ -100,7 +114,7 @@ class IncomePage extends StatelessWidget {
                       amount: '\$50.00',
                       color: const Color(0xFF78B5E7),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     _buildPersonContainer(
                       imageUrl:
                           'https://cdn.pixabay.com/photo/2023/08/13/18/08/woman-8188170_640.png',
@@ -108,7 +122,7 @@ class IncomePage extends StatelessWidget {
                       amount: '\$200.99',
                       color: const Color(0xFFF1BE70),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     _buildPersonContainer(
                       imageUrl:
                           'https://cdn.pixabay.com/photo/2020/03/11/10/08/camera-4921646_640.jpg',
@@ -116,7 +130,7 @@ class IncomePage extends StatelessWidget {
                       amount: '\$75.50',
                       color: const Color(0xFFD67CE6),
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     _buildPersonContainer(
                       imageUrl:
                           'https://cdn.pixabay.com/photo/2018/09/26/10/40/vintage-girl-3704270_640.png',
@@ -127,6 +141,16 @@ class IncomePage extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: 10),
+              if (amount.isNotEmpty)
+                Text(
+                  'Entered Amount: $amount',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
             ],
           ),
         ),
@@ -170,6 +194,7 @@ class IncomePage extends StatelessWidget {
     return Container(
       width: 250,
       height: 300,
+      margin: const EdgeInsets.symmetric(horizontal: 10.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -249,7 +274,7 @@ class IncomePage extends StatelessWidget {
             backgroundImage: NetworkImage(imageUrl),
             radius: 30,
           ),
-          const SizedBox(height: 3),
+          const SizedBox(height: 5),
           Text(
             name,
             style: const TextStyle(
@@ -269,6 +294,52 @@ class IncomePage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showAmountDialog(BuildContext context) {
+    final TextEditingController amountController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Enter Amount'),
+          content: TextField(
+            controller: amountController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(hintText: 'Enter amount'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  amount = amountController.text;
+                });
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ConfirmationPage(amount: amount),
+                  ),
+                );
+              },
+              child: const Text(
+                'Submit',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
